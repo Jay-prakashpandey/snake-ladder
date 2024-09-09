@@ -7,7 +7,7 @@ const app = express();
 const server = http.createServer(app);
 const io = socketIo(server);
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 8080;
 const playerPositions = [1, 1]; // Player 1 and 2 start at position 1
 
 // Serve static files
