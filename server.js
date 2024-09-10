@@ -29,6 +29,15 @@ io.on("connection", (socket) => {
     }
   });
 
+  socket.on("reset-game", () => {
+    // Reset player positions
+    playerPositions[0] = 1;
+    playerPositions[1] = 1;
+    io.emit("update-game", { player: 1, newPosition: 1 });
+    io.emit("update-game", { player: 2, newPosition: 1 });
+    io.emit("dice-result", { diceRoll: 0 });
+  });
+
   socket.on("disconnect", () => {
     console.log("A player disconnected");
   });

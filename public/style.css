@@ -137,3 +137,13 @@ td {
     font-size: 16px; /* Adjust font size for mobile */
   }
 }
+
+.player-token {
+  background-color: blue;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  position: absolute;
+  transition: transform 0.5s ease; /* Smooth transition for movement */
+}
+

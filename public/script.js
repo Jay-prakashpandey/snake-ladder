@@ -9,6 +9,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const diceResult = document.getElementById("dice-value");
   const rollDiceButton = document.getElementById("roll-dice");
   const turnIndicator = document.getElementById("turn-indicator");
+  const resetButton = document.getElementById("reset-game");
 
   generateBoard(board);
   updateTurnIndicator();
@@ -17,6 +18,10 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!rollDiceButton.disabled) {
       rollDice(playerTurn);
     }
+  });
+
+  resetButton.addEventListener("click", () => {
+    resetGame();
   });
 
   socket.on("update-game", ({ player, newPosition }) => {
@@ -82,8 +87,14 @@ function updateBoard() {
       playerToken.style.top = '50%'; // Center vertically
       playerToken.style.left = '50%'; // Center horizontally
       playerToken.style.transform = 'translate(-50%, -50%)'; // Adjust for centering
+      playerToken.style.transition = 'transform 0.5s ease';
       cell.style.position = 'relative'; // Ensure the cell is positioned relatively
       cell.appendChild(playerToken);
+      // Animate token movement
+      setTimeout(() => {
+        const rect = cell.getBoundingClientRect();
+        playerToken.style.transform = `translate(${rect.left + rect.width / 2}px, ${rect.top + rect.height / 2}px)`;
+      }, 0);
     }
   });
 }
@@ -109,3 +120,20 @@ function updateTurnIndicator() {
 
   rollDiceButton.disabled = !(playerTurn === 1 || playerTurn === 2);
 }
+
+function resetGame() {
+  // Emit reset event to the server
+  socket.emit("reset-game");
+  
+  // Reset local game state
+  playerTurn = 1;
+  playerPositions = [1, 1];
+  document.getElementById("dice-value").textContent = '0';
+  document.getElementById("roll-dice").disabled = false;
+  document.getElementById("reset-game").style.display = 'none';
+
+  generateBoard(document.getElementById("board")); // Regenerate board
+  updateBoard(); // Update player positions
+  updateTurnIndicator(); // Reset turn indicator
+}
+
